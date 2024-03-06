@@ -22,14 +22,15 @@ function Dashboard() {
 
     if (!user) {
       navigate("/login");
+      return () => {
+        dispatch(reset());
+      };
     }
 
-    dispatch(getGoals());
-
-    return () => {
-      dispatch(reset());
-    };
-  }, [user, navigate, isError, message]);
+    if (user) {
+      dispatch(getGoals());
+    }
+  }, [user, navigate, isError, message, dispatch]);
 
   if (isLoading) {
     return <Spinner />;
