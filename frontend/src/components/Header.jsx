@@ -18,7 +18,10 @@ function Header() {
   return (
     <header className="header">
       <div className="logo">
-        <Link to="/">ToDo List</Link>
+        <Link to="/">goals.</Link>
+      </div>
+      <div className="user-welcome">
+        <p>{user && `Welcome ${user.name}!`}</p>
       </div>
       <ul>
         {user ? (

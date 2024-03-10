@@ -9,11 +9,15 @@ const userSchema = mongoose.Schema(
     email: {
       type: String,
       required: [true, "Please enter your email"],
-      unique: true, // checks that only unique emails are stored in the database
+      unique: true,
     },
     password: {
       type: String,
       required: [true, "Please enter your password"],
+    },
+    isMentor: {
+      type: Boolean,
+      default: false,
     },
   },
   {

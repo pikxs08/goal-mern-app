@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FaUser } from "react-icons/fa";
 import { register, reset } from "../features/auth/authSlice";
+import "react-toastify/dist/ReactToastify.css";
 import Spinner from "../components/Spinner";
 
 function Register() {
