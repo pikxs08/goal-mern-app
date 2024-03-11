@@ -1,12 +1,8 @@
 import React, { useState } from "react";
-// import Modal from "react-modal";
 import { FaCommentDots } from "react-icons/fa6";
 import { useDispatch } from "react-redux";
 import { updateGoal, addComment, getGoals } from "../features/goals/goalSlice";
 import { IoIosClose } from "react-icons/io";
-
-// Setting Modal Element - When view is clicked it opens
-// Modal.setAppElement("#root");
 
 function GoalModal({ goal, user, closeModal }) {
   const dispatch = useDispatch();
@@ -89,7 +85,6 @@ function GoalModal({ goal, user, closeModal }) {
   const handleCommentSubmit = (e) => {
     e.preventDefault();
     // Dispatch action to add comment
-    console.log("Payload:", goal._id, commentText, userName);
 
     dispatch(addComment({ id: goal._id, text: commentText, name: userName }))
       .then(() => {
@@ -115,7 +110,7 @@ function GoalModal({ goal, user, closeModal }) {
 
   return (
     <>
-      <div className="modal scale-in-center " isOpen={true}>
+      <div className="modal scale-in-center ">
         <button className="btn btn-close" onClick={closeModal}>
           <IoIosClose />
         </button>

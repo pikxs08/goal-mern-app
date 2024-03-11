@@ -4,19 +4,10 @@ import { deleteGoal } from "../features/goals/goalSlice";
 import { FaTrash } from "react-icons/fa";
 import GoalModal from "./GoalModal";
 import { IoIosAlert } from "react-icons/io";
-import { SlUser } from "react-icons/sl";
-import { SlUserFollow } from "react-icons/sl";
+import { SlUser, SlUserFollow } from "react-icons/sl";
 
 function GoalItem({ user, goal }) {
   const [modalIsOpen, setModalIsOpen] = useState(false);
-
-  const openModal = () => {
-    setModalIsOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalIsOpen(false);
-  };
   const dispatch = useDispatch();
 
   // Function to calculate days left before target date
@@ -28,6 +19,19 @@ function GoalItem({ user, goal }) {
     return diffDays;
   };
 
+  // Function to handle opening the modal
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  // Function to handle closing the modal
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
+
+  // Check if user exists and is not null before accessing its properties
+  const isMentor = user && user.isMentor;
+
   return (
     <>
       {modalIsOpen && (
@@ -37,7 +41,7 @@ function GoalItem({ user, goal }) {
         <div className="goal-item-inner">
           {goal.needsHelp ? (
             <IoIosAlert className="help" />
-          ) : user.isMentor && user._id === goal.user ? (
+          ) : isMentor && user._id === goal.user ? (
             <SlUserFollow style={{ height: "20px", width: "20px" }} />
           ) : (
             <SlUser style={{ height: "20px", width: "20px" }} />
