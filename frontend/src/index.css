@@ -36,7 +36,13 @@ h3 {
 
 .help {
   color: coral;
-  font-size: 20px;
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.pending {
+  color: #efefef;
+  font-size: 30px;
   font-weight: 600;
 }
 
@@ -110,10 +116,6 @@ h3 {
 .header ul li a {
   display: flex;
   align-items: center;
-}
-
-.header ul li a:hover {
-  color: #777;
 }
 
 .header ul li a svg {
@@ -267,6 +269,10 @@ input[id="needsHelp"] {
   max-width: 500px;
 }
 
+.goal-info {
+  width: 400px;
+}
+
 .comment-header {
   display: flex;
   flex-direction: row;
@@ -316,6 +322,38 @@ input[id="needsHelp"] {
   justify-content: center;
   border: 1px solid #40a2e3;
   transition: all 0.3s ease;
+}
+
+.btn-close {
+  padding: 2px 2px;
+  border-radius: 5px;
+  background: #e6e6e6;
+  height: 30px;
+  width: 30px;
+  color: #000;
+  font-size: 16px;
+  font-weight: 400;
+  cursor: pointer;
+  text-align: center;
+  appearance: button;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e6e6e6;
+  transition: all 0.3s ease;
+  position: absolute;
+  right: 1rem;
+}
+
+.btn-close:hover {
+  background-color: #ff0000 !important;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.btn-close > svg {
+  margin-right: 0 !important;
+  scale: 1.7;
 }
 
 .btn svg {

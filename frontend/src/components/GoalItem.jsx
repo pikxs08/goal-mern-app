@@ -4,6 +4,8 @@ import { deleteGoal } from "../features/goals/goalSlice";
 import { FaTrash } from "react-icons/fa";
 import GoalModal from "./GoalModal";
 import Modal from "react-modal";
+import { MdPending } from "react-icons/md";
+import { IoIosAlert } from "react-icons/io";
 
 // Setting Modal Element - When view is clicked it opens
 Modal.setAppElement("#root");
@@ -33,7 +35,11 @@ function GoalItem({ goal }) {
     <>
       <div className="goal-item">
         <div className="goal-item-inner">
-          {goal.needsHelp ? <p className="help">!</p> : <p>-</p>}
+          {goal.needsHelp ? (
+            <IoIosAlert className="help" />
+          ) : (
+            <MdPending className="pending" />
+          )}
           <h2 className="goal-item-title">{goal.text}</h2>
           <p className="goal-item-days">
             {daysLeft(goal.targetDate)} days left

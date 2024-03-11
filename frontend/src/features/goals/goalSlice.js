@@ -171,10 +171,11 @@ export const goalSlice = createSlice({
       .addCase(addComment.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
+        const { id, comment } = action.payload;
         // Update the comment in the goal object
         const updatedGoals = state.goals.map((goal) =>
-          goal._id === action.payload.id
-            ? { ...goal, comments: [...goal.comments, action.payload.comment] }
+          goal._id === id
+            ? { ...goal, comments: [...goal.comments, comment] }
             : goal
         );
         state.goals = updatedGoals;
@@ -185,7 +186,24 @@ export const goalSlice = createSlice({
         state.message = action.payload;
       })
       .addCase(fetchLatestComments.fulfilled, (state, action) => {
-        state.comments = action.payload;
+        const commentsData = action.payload;
+
+        // Iterate over each goal
+        state.goals.forEach((goal) => {
+          // Iterate over each comment in the goal
+          goal.comments.forEach((comment) => {
+            // Find the comment data from the fetched comments based on the comment's ID
+            const commentData = commentsData.find(
+              (data) => data._id === comment._id
+            );
+            if (commentData) {
+              // Populate the user and mentor fields in the comment
+
+              comment.user = commentData.user;
+              comment.mentor = commentData.mentor;
+            }
+          });
+        });
       })
       .addCase(fetchLatestComments.rejected, (state, action) => {
         state.isLoading = false;

@@ -7,11 +7,15 @@ import {
   addComment,
   fetchLatestComments,
 } from "../features/goals/goalSlice";
+import { IoIosClose } from "react-icons/io";
 
 function GoalModal({ goal, closeModal }) {
   const dispatch = useDispatch();
   const [text, setText] = useState(goal.text);
-  const [targetDate, setTargetDate] = useState(goal.targetDate);
+  const [targetDate, setTargetDate] = useState(
+    new Date(goal.targetDate).toISOString().split("T")[0]
+  );
+
   const [needsHelp, setNeedsHelp] = useState(goal.needsHelp);
   const [completed, setCompleted] = useState(goal.completed);
 
@@ -21,6 +25,15 @@ function GoalModal({ goal, closeModal }) {
   // Function to handle comment input change
   const handleCommentChange = (e) => {
     setCommentText(e.target.value);
+  };
+
+  // Function to calculate days left before target date
+  const daysLeft = (targetDate) => {
+    const date1 = new Date(targetDate);
+    const date2 = new Date();
+    const diffTime = date1 - date2;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
   };
 
   // Function to handle form input change
@@ -42,15 +55,25 @@ function GoalModal({ goal, closeModal }) {
         break;
     }
   };
-
-  // Function to handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Dispatch action to update goal with form data
-    dispatch(
-      updateGoal({ id: goal._id, text, targetDate, needsHelp, completed })
-    );
-    closeModal();
+    try {
+      // Dispatch action to add comment
+      await handleCommentSubmit(e);
+
+      // Fetch latest comments
+      await dispatch(fetchLatestComments());
+
+      // Clear comment input
+      setCommentText("");
+
+      // Dispatch action to update goal with form data
+      await dispatch(
+        updateGoal({ id: goal._id, text, targetDate, needsHelp, completed })
+      );
+    } catch (error) {
+      console.error("Error updating goal and adding comment:", error);
+    }
   };
 
   // Function to handle comment submission
@@ -69,20 +92,31 @@ function GoalModal({ goal, closeModal }) {
       });
   };
 
+  const handleGoalSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      // Dispatch action to update goal with form data
+      await dispatch(
+        updateGoal({ id: goal._id, text, targetDate, needsHelp, completed })
+      );
+    } catch (error) {
+      console.error("Error updating goal:", error);
+    }
+  };
+
   return (
     <Modal isOpen={true} onRequestClose={closeModal}>
-      <button onClick={closeModal}>Close</button>
+      <button className="btn btn-close" onClick={closeModal}>
+        <IoIosClose />
+      </button>
       {/* Comment Section */}
 
       <div className="goal-info-cont">
         <div className="info-cont">
           <div className="goal-info">
             <h2>{goal.text}</h2>
-            <p>
-              {" "}
-              Target Date: {new Date(goal.targetDate).toLocaleDateString()}
-            </p>
-            <p>Days left: {goal.daysLeft}</p>
+            <p>Due date: {new Date(goal.targetDate).toLocaleDateString()}</p>
+            <p>Tracking: {daysLeft(goal.targetDate)} days</p>
           </div>
           <div className="goal-comments">
             <h3>Comments:</h3>
@@ -100,7 +134,7 @@ function GoalModal({ goal, closeModal }) {
                 </li>
               ))}
             </ul>
-            <form onSubmit={handleCommentSubmit}>
+            <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <input
                   type="text"
@@ -121,7 +155,7 @@ function GoalModal({ goal, closeModal }) {
 
       {/* Edit Goal Section */}
       <h3>Edit Goal</h3>
-      <form onSubmit={handleSubmit} className="edit-modal-form">
+      <form onSubmit={handleGoalSubmit} className="edit-modal-form">
         <div className="form-group">
           <label>
             Title:
