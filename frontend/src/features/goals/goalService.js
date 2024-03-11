@@ -14,15 +14,65 @@ const createGoal = async (goalData, token) => {
   return response.data;
 };
 
+// Create a new comment
+
+const addComment = async (goalId, commentData, token) => {
+  try {
+    const response = await axios.put(
+      `${API_URL}/${goalId}/comment`,
+      { text: commentData },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Fetch latest comments
+const fetchLatestComments = async (token) => {
+  try {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const response = await axios.get(`${API_URL}/latest-comments`, config);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // Get user goals
 const getGoals = async (token) => {
   const config = {
     headers: {
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
   };
 
   const response = await axios.get(API_URL, config);
+
+  return response.data;
+};
+
+// Update user goal
+const putGoal = async (goal, token) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.put(API_URL + goal.id, goal, config);
 
   return response.data;
 };
@@ -43,7 +93,10 @@ const deleteGoal = async (goalId, token) => {
 const goalService = {
   createGoal,
   getGoals,
+  putGoal,
   deleteGoal,
+  addComment,
+  fetchLatestComments,
 };
 
 export default goalService;

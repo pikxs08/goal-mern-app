@@ -6,6 +6,7 @@ const {
   putGoal,
   addComment,
   deleteGoal,
+  fetchLatestComments,
 } = require("../controllers/goalsController");
 const { protect } = require("../middleware/authMiddleware");
 
@@ -17,6 +18,8 @@ router.post("/", protect, setGoal);
 router.put("/:id", protect, putGoal);
 // PUT add a comment to a goal
 router.put("/:goalId/comment", protect, addComment);
+// GET latest comments
+router.get("/latest-comments", protect, fetchLatestComments);
 // DELETE goal
 router.delete("/:id", protect, deleteGoal);
 

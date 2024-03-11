@@ -1,8 +1,7 @@
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcryptjs"); // for hashing passwords
 const asyncHandler = require("express-async-handler");
-const User = require("../models/userModel");
-const { generateToken } = require("../middleware/auth");
+const userModel = require("../models/userModel");
 
 // Registers new user
 const registerUser = asyncHandler(async (req, res) => {
@@ -48,7 +47,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
-// Authenticate user
+// Authenticate user api/users/login
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -57,20 +56,18 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new Error("Please fill in all fields");
   }
 
-  // Check if user exists by email
-  const user = await User.findOne({
+  //  check if user exists by email
+  const user = await userModel.findOne({
     email,
   });
 
-  // Compare password entered with hashed password using bcrypt compare method
+  //   Compare password entered with Hashedpassword using bcrypt compare method
   if (user && (await bcrypt.compare(password, user.password))) {
-    const token = generateToken(user._id, user.isMentor); // Generate token with user ID and role
     res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
-      isMentor: user.isMentor,
-      token,
+      token: generateToken(user._id),
     });
   } else {
     res.status(400);
@@ -78,21 +75,20 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 });
 
-// Get user data
+// Get user data api/users/me
 const getMe = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user.id);
-
-  if (!user) {
-    res.status(404);
-    throw new Error("User not found");
-  }
+  const { _id, name, email } = await userModel.findById(req.user.id);
 
   res.status(200).json({
-    _id: user._id,
-    name: user.name,
-    email: user.email,
-    isMentor: user.isMentor,
+    _id,
+    name,
+    email,
   });
 });
+
+// generate user JWT token
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30d" });
+};
 
 module.exports = { registerUser, loginUser, getMe };

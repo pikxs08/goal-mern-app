@@ -27,6 +27,26 @@ export const createGoal = createAsyncThunk(
   }
 );
 
+// User Comments
+// Create a thunk action for adding a comment
+export const addComment = createAsyncThunk(
+  "goals/addComment",
+  async ({ id, text }, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await goalService.addComment(id, text, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 // Get user goals
 export const getGoals = createAsyncThunk(
   "goals/getAll",
@@ -46,13 +66,34 @@ export const getGoals = createAsyncThunk(
   }
 );
 
-export const updateGoal = createAsyncThunk(
-  "goals/updateGoal",
-  async (goal, thunkAPI) => {
+// Get latest comments
+export const fetchLatestComments = createAsyncThunk(
+  "goals/fetchLatestComments",
+  async (_, thunkAPI) => {
     try {
-      return await goalService.putGoal(goal);
+      const token = thunkAPI.getState().auth.user.token;
+      return await goalService.fetchLatestComments(token);
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
+
+// Delete user goal
+export const updateGoal = createAsyncThunk(
+  "goals/putGoal",
+  async (id, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await goalService.putGoal(id, token);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -120,6 +161,48 @@ export const goalSlice = createSlice({
         );
       })
       .addCase(deleteGoal.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(addComment.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(addComment.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        // Update the comment in the goal object
+        const updatedGoals = state.goals.map((goal) =>
+          goal._id === action.payload.id
+            ? { ...goal, comments: [...goal.comments, action.payload.comment] }
+            : goal
+        );
+        state.goals = updatedGoals;
+      })
+      .addCase(addComment.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(fetchLatestComments.fulfilled, (state, action) => {
+        state.comments = action.payload;
+      })
+      .addCase(fetchLatestComments.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(updateGoal.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateGoal.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.goals = state.goals.map((goal) =>
+          goal._id === action.payload._id ? action.payload : goal
+        );
+      })
+      .addCase(updateGoal.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

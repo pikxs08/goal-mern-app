@@ -44,11 +44,26 @@ const addComment = asyncHandler(async (req, res) => {
   }
 
   // Add the comment to the goal
-  const newComment = { user: req.user.id, text };
+  const newComment = { user: req.user.id, text: req.body.text };
   goal.comments.push(newComment);
   await goal.save();
 
   res.status(201).json(goal.comments);
+});
+
+// Get latest comments
+const fetchLatestComments = asyncHandler(async (req, res) => {
+  try {
+    const latestComments = await Goal.find()
+      .sort({ createdAt: -1 })
+      .limit(50) // Adjust this limit as per your requirement
+      .populate("comments.user", "name")
+      .populate("comments.mentor", "name");
+
+    res.status(200).json(latestComments);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch latest comments" });
+  }
 });
 
 const setGoal = asyncHandler(async (req, res) => {
@@ -120,4 +135,11 @@ const deleteGoal = asyncHandler(async (req, res) => {
   res.status(200).json({ id: req.params.id });
 });
 
-module.exports = { getGoals, setGoal, putGoal, addComment, deleteGoal };
+module.exports = {
+  getGoals,
+  setGoal,
+  putGoal,
+  addComment,
+  deleteGoal,
+  fetchLatestComments,
+};

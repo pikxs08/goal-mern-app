@@ -11,10 +11,12 @@ function Dashboard() {
   const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.auth);
+
   const { goals, isLoading, isError, message } = useSelector(
     (state) => state.goals
   );
 
+  // Get user data from local storage and fetch initial data
   useEffect(() => {
     if (isError) {
       console.log(message);
@@ -39,10 +41,13 @@ function Dashboard() {
   return (
     <>
       <section className="heading">
-        <h1>Welcome {user && user.name}</h1>
-        <p>Goals Dashboard</p>
+        {!user?.isMentor ? (
+          <h3>My goals dashboard</h3>
+        ) : (
+          <h3>People who need your wisdom!</h3>
+        )}
       </section>
-      <GoalsForm />
+      {!user?.isMentor && <GoalsForm />}
 
       <section className="content">
         {goals.length > 0 ? (

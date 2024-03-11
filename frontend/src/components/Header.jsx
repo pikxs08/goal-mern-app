@@ -17,8 +17,10 @@ function Header() {
 
   return (
     <header className="header">
-      <div className="logo">
-        <Link to="/">goals.</Link>
+      <div className="logo-cont">
+        <Link className="logo" to="/">
+          goals.
+        </Link>
       </div>
       <div className="user-welcome">
         <p>{user && `Welcome ${user.name}!`}</p>
@@ -38,12 +40,12 @@ function Header() {
         ) : (
           <>
             <li>
-              <Link to="/register">
+              <Link className="btn" to="/register">
                 <FaUser /> Register
               </Link>
             </li>
             <li>
-              <Link to="/login">
+              <Link className="btn" to="/login">
                 <FaSignInAlt /> Login
               </Link>
             </li>
