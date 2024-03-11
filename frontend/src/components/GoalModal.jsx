@@ -114,131 +114,144 @@ function GoalModal({ goal, user, closeModal }) {
   };
 
   return (
-    <div className="modal scale-in-center " isOpen={true}>
-      <button className="btn btn-close" onClick={closeModal}>
-        <IoIosClose />
-      </button>
-      <div className="goal-info-cont">
-        <div className="info-cont">
-          <div className="goal-info">
-            <h2 style={{ fontWeight: "800", fontSize: "2rem" }}>{goal.text}</h2>
-            <p>
-              <strong>Due date:</strong>{" "}
-              {new Date(goal.targetDate).toLocaleDateString()}
-            </p>
-            <p>
-              <strong>Days left:</strong> {daysLeft(goal.targetDate)} days
-            </p>
-            <div className="goal-status">
+    <>
+      <div className="modal scale-in-center " isOpen={true}>
+        <button className="btn btn-close" onClick={closeModal}>
+          <IoIosClose />
+        </button>
+        <div className="goal-info-cont">
+          <div className="info-cont">
+            <div className="goal-info">
+              <h2
+                style={{
+                  fontWeight: "800",
+                  fontSize: "2rem",
+                  minWidth: "350px",
+                }}
+              >
+                {goal.text}
+              </h2>
               <p>
-                <strong>Status:</strong>
+                <strong>Due date:</strong>{" "}
+                {new Date(goal.targetDate).toLocaleDateString()}
               </p>
-              {goal.completed ? (
-                <p
-                  className="pill pill-completed"
-                  style={{ width: "fit-content" }}
-                >
-                  completed
+              <p>
+                <strong>Days left:</strong> {daysLeft(goal.targetDate)} days
+              </p>
+              <div className="goal-status">
+                <p>
+                  <strong>Status:</strong>
                 </p>
-              ) : (
-                <p
-                  className="pill pill-pending"
-                  style={{ width: "fit-content" }}
-                >
-                  in progress
-                </p>
-              )}
+                {goal.completed ? (
+                  <p
+                    className="pill pill-completed"
+                    style={{ width: "fit-content" }}
+                  >
+                    completed
+                  </p>
+                ) : (
+                  <p
+                    className="pill pill-pending"
+                    style={{ width: "fit-content" }}
+                  >
+                    in progress
+                  </p>
+                )}
+              </div>
+            </div>
+            <div className="goal-comments">
+              <h3>Comments:</h3>
+              <ul className="comments-cont">
+                {goal.comments.map((comment, index) => (
+                  <li key={index} className="comment-item">
+                    <div className="comment-header">
+                      <FaCommentDots />
+                      <p className="comment-user">
+                        {comment.name.split(" ")[0]}
+                      </p>
+                      <p className="comment-date pill pill-pending">
+                        {new Date(comment.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <p className="comment-body">{comment.text}</p>
+                  </li>
+                ))}
+              </ul>
+              <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                  <input
+                    type="text"
+                    name="comment"
+                    className="form-control"
+                    value={commentText}
+                    placeholder="Add a comment here..."
+                    onChange={handleCommentChange}
+                  />
+                  <button className="btn" type="submit">
+                    Submit Comment
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
-          <div className="goal-comments">
-            <h3>Comments:</h3>
-            <ul className="comments-cont">
-              {goal.comments.map((comment, index) => (
-                <li key={index} className="comment-item">
-                  <div className="comment-header">
-                    <FaCommentDots />
-                    <p className="comment-user">{comment.name.split(" ")[0]}</p>
-                    <p className="comment-date pill pill-pending">
-                      {new Date(comment.createdAt).toLocaleDateString()}
-                    </p>
-                  </div>
-                  <p className="comment-body">{comment.text}</p>
-                </li>
-              ))}
-            </ul>
-            <form onSubmit={handleSubmit}>
-              <div className="form-group">
-                <input
-                  type="text"
-                  name="comment"
-                  className="form-control"
-                  value={commentText}
-                  placeholder="Add a comment here..."
-                  onChange={handleCommentChange}
-                />
-                <button className="btn" type="submit">
-                  Submit Comment
-                </button>
-              </div>
-            </form>
-          </div>
         </div>
-      </div>
 
-      {/* Edit Goal Section */}
-      <h3>Edit Goal</h3>
-      <form onSubmit={handleGoalSubmit} className="edit-modal-form">
-        <div className="form-group">
-          <label>
-            Title:
-            <input
-              type="text"
-              name="text"
-              className="form-control"
-              value={text}
-              onChange={handleChange}
-            />
-          </label>
-        </div>
-        <div className="form-group">
-          <label>
-            Target Date:
-            <input
-              type="date"
-              name="targetDate"
-              className="form-control"
-              value={targetDate}
-              onChange={handleChange}
-            />
-          </label>
-        </div>
-        <div className="form-group modal-checkbox">
-          <div className="checkbox ">
-            <label>Mark for Help:</label>
-            <input
-              type="checkbox"
-              name="needsHelp"
-              id="needsHelp"
-              className="form-control"
-              checked={needsHelp}
-              onChange={handleChange}
-            />
-            <label>Mark as completed:</label>
-            <input
-              type="checkbox"
-              name="completed"
-              id="completed"
-              className="form-control"
-              checked={completed}
-              onChange={handleChange}
-            />
+        {/* Edit Goal Section */}
+        <h3>Edit Goal</h3>
+        <form onSubmit={handleGoalSubmit} className="edit-modal-form">
+          <div className="form-group">
+            <label>
+              Title:
+              <input
+                type="text"
+                name="text"
+                className="form-control"
+                value={text}
+                onChange={handleChange}
+              />
+            </label>
           </div>
-          <button className="btn" type="submit">
-            Save Changes
-          </button>
-        </div>
-      </form>
-    </div>
+          <div className="form-group">
+            <label>
+              Target Date:
+              <input
+                type="date"
+                name="targetDate"
+                className="form-control"
+                value={targetDate}
+                onChange={handleChange}
+              />
+            </label>
+          </div>
+          <div className="form-group modal-checkbox">
+            <div className="checkbox ">
+              <label>Mark for Help:</label>
+              <input
+                type="checkbox"
+                name="needsHelp"
+                id="needsHelp"
+                className="form-control"
+                checked={needsHelp}
+                onChange={handleChange}
+              />
+              <label>Mark as completed:</label>
+              <input
+                type="checkbox"
+                name="completed"
+                id="completed"
+                className="form-control"
+                checked={completed}
+                onChange={handleChange}
+              />
+            </div>
+            <button className="btn" type="submit">
+              Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+      <div className="modal-overlay" onClick={closeModal}></div>
+    </>
   );
 }
 
