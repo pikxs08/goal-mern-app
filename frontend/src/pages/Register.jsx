@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { FaUser } from "react-icons/fa";
 import { register, reset } from "../features/auth/authSlice";
 import "react-toastify/dist/ReactToastify.css";
 import Spinner from "../components/Spinner";
@@ -14,6 +13,7 @@ function Register() {
     email: "",
     password: "",
     password2: "",
+    isMentor: false,
   });
 
   const { name, email, password, password2 } = formData;
@@ -37,10 +37,14 @@ function Register() {
     dispatch(reset());
   }, [user, isError, isSuccess, message, navigate, dispatch]);
 
+  // Handle form input change
   const onChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    const newValue = type === "checkbox" ? checked : value;
+
     setFormData((prevState) => ({
       ...prevState,
-      [e.target.name]: e.target.value,
+      [name]: newValue,
     }));
   };
 
@@ -53,8 +57,9 @@ function Register() {
         name,
         email,
         password,
+        isMentor: formData.isMentor,
       };
-
+      console.log(userData);
       dispatch(register(userData));
     }
   };
@@ -65,11 +70,13 @@ function Register() {
 
   return (
     <>
-      <section className="header">
-        <h1>
-          <FaUser /> Register
-        </h1>
-        <p>Please create an account</p>
+      <section className="form-header">
+        <h1>Register</h1>
+        <p>
+          Please create an account below. If you are seeking to join our
+          community and become a mentor to assist others reach their goal,
+          ensure to check the box below.
+        </p>
       </section>
       <section className="form">
         <form onSubmit={onSubmit}>
@@ -116,6 +123,22 @@ function Register() {
               placeholder="Confirm your password"
               onChange={onChange}
             />
+          </div>
+          <div className="form-group checkbox">
+            <input
+              type="checkbox"
+              className="form-control"
+              id="isMentor"
+              name="isMentor"
+              value={formData.isMentor}
+              onChange={onChange}
+            />
+            <label
+              htmlFor="isMentor"
+              style={{ color: "grey", fontWeight: "400", fontSize: "14px" }}
+            >
+              I want to be a coach and help others
+            </label>
           </div>
           <div className="form-group">
             <button type="submit" className="btn btn-block">

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
+import { FaCommentDots } from "react-icons/fa6";
 import { useDispatch } from "react-redux";
 import {
   updateGoal,
@@ -70,64 +71,107 @@ function GoalModal({ goal, closeModal }) {
 
   return (
     <Modal isOpen={true} onRequestClose={closeModal}>
-      <h2>Edit Goal</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Title:
-          <input type="text" name="text" value={text} onChange={handleChange} />
-        </label>
-        <label>
-          Target Date:
-          <input
-            type="date"
-            name="targetDate"
-            value={targetDate}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Needs Help:
-          <input
-            type="checkbox"
-            name="needsHelp"
-            checked={needsHelp}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Completed:
-          <input
-            type="checkbox"
-            name="completed"
-            checked={completed}
-            onChange={handleChange}
-          />
-        </label>
-        <button type="submit">Save Changes</button>
-      </form>
-
-      {/* Comment Section */}
-      <h2>Comments</h2>
-      <ul>
-        {goal.comments.map((comment, index) => (
-          <li key={index}>
-            <p>User: {comment.user.name}</p>
-            <p>Text: {comment.text}</p>
-            <p>Created At: {comment.createdAt}</p>
-          </li>
-        ))}
-      </ul>
-
-      <form onSubmit={handleCommentSubmit}>
-        <input
-          type="text"
-          name="comment"
-          value={commentText}
-          onChange={handleCommentChange}
-        />
-        <button type="submit">Submit Comment</button>
-      </form>
       <button onClick={closeModal}>Close</button>
+      {/* Comment Section */}
+
+      <div className="goal-info-cont">
+        <div className="info-cont">
+          <div className="goal-info">
+            <h2>{goal.text}</h2>
+            <p>
+              {" "}
+              Target Date: {new Date(goal.targetDate).toLocaleDateString()}
+            </p>
+            <p>Days left: {goal.daysLeft}</p>
+          </div>
+          <div className="goal-comments">
+            <h3>Comments:</h3>
+            <ul className="comments-cont">
+              {goal.comments.map((comment, index) => (
+                <li key={index} className="comment-item">
+                  <div className="comment-header">
+                    <FaCommentDots />
+                    <p className="comment-user">{comment.user.name}</p>
+                    <p className="comment-date pill pill-pending">
+                      {new Date(comment.createdAt).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <p className="comment-body">{comment.text}</p>
+                </li>
+              ))}
+            </ul>
+            <form onSubmit={handleCommentSubmit}>
+              <div className="form-group">
+                <input
+                  type="text"
+                  name="comment"
+                  className="form-control"
+                  value={commentText}
+                  placeholder="Add a comment here..."
+                  onChange={handleCommentChange}
+                />
+                <button className="btn" type="submit">
+                  Submit Comment
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      {/* Edit Goal Section */}
+      <h3>Edit Goal</h3>
+      <form onSubmit={handleSubmit} className="edit-modal-form">
+        <div className="form-group">
+          <label>
+            Title:
+            <input
+              type="text"
+              name="text"
+              className="form-control"
+              value={text}
+              onChange={handleChange}
+            />
+          </label>
+        </div>
+        <div className="form-group">
+          <label>
+            Target Date:
+            <input
+              type="date"
+              name="targetDate"
+              className="form-control"
+              value={targetDate}
+              onChange={handleChange}
+            />
+          </label>
+        </div>
+        <div className="form-group modal-checkbox">
+          <div className="checkbox ">
+            <label>Mark for Help:</label>
+            <input
+              type="checkbox"
+              name="needsHelp"
+              id="needsHelp"
+              className="form-control"
+              checked={needsHelp}
+              onChange={handleChange}
+            />
+            <label>Mark as completed:</label>
+            <input
+              type="checkbox"
+              name="completed"
+              id="completed"
+              className="form-control"
+              checked={completed}
+              onChange={handleChange}
+            />
+          </div>
+          <button className="btn" type="submit">
+            Save Changes
+          </button>
+        </div>
+      </form>
     </Modal>
   );
 }

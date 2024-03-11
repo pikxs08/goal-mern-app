@@ -13,7 +13,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   // Check if user exists
-  const userExists = await User.findOne({ email });
+  const userExists = await userModel.findOne({ email });
 
   if (userExists) {
     res.status(400);
@@ -25,15 +25,15 @@ const registerUser = asyncHandler(async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, salt);
 
   // Create user
-  const user = await User.create({
+  const user = await userModel.create({
     name,
     email,
     password: hashedPassword,
-    isMentor: isMentor || false, // Set isMentor to false if not provided
+    isMentor,
   });
 
   if (user) {
-    const token = generateToken(user._id, user.isMentor); // Generate token with user ID and role
+    const token = generateToken(user._id); // Generate token with user ID
     res.status(201).json({
       _id: user._id,
       name: user.name,
@@ -67,6 +67,7 @@ const loginUser = asyncHandler(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      isMentor: user.isMentor,
       token: generateToken(user._id),
     });
   } else {

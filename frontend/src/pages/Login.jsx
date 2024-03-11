@@ -1,6 +1,5 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { FaSignInAlt } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -58,11 +57,15 @@ function Login() {
 
   return (
     <>
-      <section className="header">
-        <h1>
-          <FaSignInAlt /> Login
-        </h1>
-        <p>Please sign-in below</p>
+      <section className="form-header">
+        <h1>Login</h1>
+        <p>
+          <q>
+            First say to yourself what you would be; <br /> and then do what you
+            have to do
+          </q>
+          - Epictetus
+        </p>
       </section>
       <section className="form">
         <form onSubmit={onSubmit}>

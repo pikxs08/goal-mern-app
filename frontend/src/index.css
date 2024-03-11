@@ -76,6 +76,18 @@ h3 {
   text-align: center;
 }
 
+.form-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+  max-width: 500px;
+  gap: 1rem;
+  font-size: 14px;
+  margin: 20px auto;
+}
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -182,8 +194,104 @@ h3 {
   font-family: inherit;
 }
 
+.checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.modal-checkbox {
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal-checkbox > button {
+  padding: 20px;
+}
+
+input[id="isMentor"],
+input[id="completed"],
+input[id="needsHelp"] {
+  margin-right: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+  cursor: pointer;
+  border: 3px solid #e6e6e6;
+}
+
+input[id="completed"],
+input[id="needsHelp"] {
+  width: 20px;
+  height: 20px;
+  margin-top: 5px;
+}
+
 #targetDate {
   cursor: pointer;
+}
+
+.goal-info-cont {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border-bottom: 1px solid #e6e6e6;
+  margin-bottom: 20px;
+}
+
+.info-cont {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 5rem;
+}
+
+.comments-cont {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 20px 0;
+  width: 100%;
+  overflow-y: scroll;
+  max-height: 300px;
+}
+
+.comment-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.goal-comments {
+  width: 100%;
+  max-width: 500px;
+}
+
+.comment-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 10px;
+  align-items: center;
+}
+
+.comment-user {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.comment-date {
+  font-size: 10px;
+  color: #828282;
+}
+
+.comment-body {
+  font-size: 14px;
+  background-color: #efefef96;
+  width: fit-content;
+  padding: 5px;
+  border-radius: 5px;
+  margin: 5px 0px;
 }
 
 .form-group label {
