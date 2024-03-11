@@ -1,30 +1,30 @@
 import React, { useState } from "react";
-import Modal from "react-modal";
+// import Modal from "react-modal";
 import { FaCommentDots } from "react-icons/fa6";
 import { useDispatch } from "react-redux";
-import { updateGoal, addComment } from "../features/goals/goalSlice";
+import { updateGoal, addComment, getGoals } from "../features/goals/goalSlice";
 import { IoIosClose } from "react-icons/io";
 
 // Setting Modal Element - When view is clicked it opens
-Modal.setAppElement("#root");
+// Modal.setAppElement("#root");
 
-function GoalModal({ goal, closeModal }) {
+function GoalModal({ goal, user, closeModal }) {
   const dispatch = useDispatch();
+
+  // State to hold form data
   const [text, setText] = useState(goal.text);
+  const [needsHelp, setNeedsHelp] = useState(goal.needsHelp);
+  const [completed, setCompleted] = useState(goal.completed);
   const [targetDate, setTargetDate] = useState(
     new Date(goal.targetDate).toISOString().split("T")[0]
   );
 
-  const [needsHelp, setNeedsHelp] = useState(goal.needsHelp);
-  const [completed, setCompleted] = useState(goal.completed);
+  // Get user name
+  const userName = user.name;
 
-  // State to hold comment text
-  const [commentText, setCommentText] = useState("");
-
-  // Function to handle comment input change
-  const handleCommentChange = (e) => {
-    setCommentText(e.target.value);
-  };
+  // Get goal comments
+  const comments = goal.comments.map((comment) => comment.user);
+  console.log(comments);
 
   // Function to calculate days left before target date
   const daysLeft = (targetDate) => {
@@ -33,6 +33,14 @@ function GoalModal({ goal, closeModal }) {
     const diffTime = date1 - date2;
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays;
+  };
+
+  // State to hold comment text
+  const [commentText, setCommentText] = useState("");
+
+  // Function to handle comment input change
+  const handleCommentChange = (e) => {
+    setCommentText(e.target.value);
   };
 
   // Function to handle form input change
@@ -54,6 +62,8 @@ function GoalModal({ goal, closeModal }) {
         break;
     }
   };
+
+  // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -67,6 +77,9 @@ function GoalModal({ goal, closeModal }) {
       await dispatch(
         updateGoal({ id: goal._id, text, targetDate, needsHelp, completed })
       );
+
+      // Fetch updated goal
+      await dispatch(getGoals(goal._id));
     } catch (error) {
       console.error("Error updating goal and adding comment:", error);
     }
@@ -76,7 +89,9 @@ function GoalModal({ goal, closeModal }) {
   const handleCommentSubmit = (e) => {
     e.preventDefault();
     // Dispatch action to add comment
-    dispatch(addComment({ id: goal._id, text: commentText }))
+    console.log("Payload:", goal._id, commentText, userName);
+
+    dispatch(addComment({ id: goal._id, text: commentText, name: userName }))
       .then(() => {
         // Clear comment input
         setCommentText("");
@@ -99,16 +114,41 @@ function GoalModal({ goal, closeModal }) {
   };
 
   return (
-    <Modal isOpen={true} onRequestClose={closeModal}>
+    <div className="modal scale-in-center " isOpen={true}>
       <button className="btn btn-close" onClick={closeModal}>
         <IoIosClose />
       </button>
       <div className="goal-info-cont">
         <div className="info-cont">
           <div className="goal-info">
-            <h2>{goal.text}</h2>
-            <p>Due date: {new Date(goal.targetDate).toLocaleDateString()}</p>
-            <p>Tracking: {daysLeft(goal.targetDate)} days</p>
+            <h2 style={{ fontWeight: "800", fontSize: "2rem" }}>{goal.text}</h2>
+            <p>
+              <strong>Due date:</strong>{" "}
+              {new Date(goal.targetDate).toLocaleDateString()}
+            </p>
+            <p>
+              <strong>Days left:</strong> {daysLeft(goal.targetDate)} days
+            </p>
+            <div className="goal-status">
+              <p>
+                <strong>Status:</strong>
+              </p>
+              {goal.completed ? (
+                <p
+                  className="pill pill-completed"
+                  style={{ width: "fit-content" }}
+                >
+                  completed
+                </p>
+              ) : (
+                <p
+                  className="pill pill-pending"
+                  style={{ width: "fit-content" }}
+                >
+                  in progress
+                </p>
+              )}
+            </div>
           </div>
           <div className="goal-comments">
             <h3>Comments:</h3>
@@ -117,7 +157,7 @@ function GoalModal({ goal, closeModal }) {
                 <li key={index} className="comment-item">
                   <div className="comment-header">
                     <FaCommentDots />
-                    <p className="comment-user">{comment.user.name}</p>
+                    <p className="comment-user">{comment.name.split(" ")[0]}</p>
                     <p className="comment-date pill pill-pending">
                       {new Date(comment.createdAt).toLocaleDateString()}
                     </p>
@@ -198,7 +238,7 @@ function GoalModal({ goal, closeModal }) {
           </button>
         </div>
       </form>
-    </Modal>
+    </div>
   );
 }
 

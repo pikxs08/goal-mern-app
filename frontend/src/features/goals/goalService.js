@@ -16,21 +16,19 @@ const createGoal = async (goalData, token) => {
 
 // Create a new comment
 
-const addComment = async (goalId, commentData, token) => {
-  try {
-    const response = await axios.put(
-      `${API_URL}/${goalId}/comment`,
-      { text: commentData },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+const addComment = async (id, name, text, token) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await axios.put(
+    `${API_URL}${id}/comment`,
+    { name, text },
+    config
+  );
+  return response.data;
 };
 
 // Get user goals with filtering

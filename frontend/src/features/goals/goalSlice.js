@@ -31,10 +31,10 @@ export const createGoal = createAsyncThunk(
 // Create a thunk action for adding a comment
 export const addComment = createAsyncThunk(
   "goals/addComment",
-  async ({ id, text }, thunkAPI) => {
+  async ({ id, name, text }, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token;
-      return await goalService.addComment(id, text, token);
+      return await goalService.addComment(id, name, text, token);
     } catch (error) {
       const message =
         (error.response &&

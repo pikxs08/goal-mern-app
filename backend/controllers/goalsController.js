@@ -43,7 +43,7 @@ const getGoals = asyncHandler(async (req, res) => {
 
 // Add comment to a goal
 const addComment = asyncHandler(async (req, res) => {
-  const { text } = req.body;
+  const { name, text } = req.body;
   const { goalId } = req.params;
 
   const goal = await Goal.findById(goalId);
@@ -62,7 +62,7 @@ const addComment = asyncHandler(async (req, res) => {
   }
 
   // Add the comment to the goal
-  const newComment = { user: req.user.id, text: req.body.text };
+  const newComment = { name: name, text: text };
   goal.comments.push(newComment);
   await goal.save();
 

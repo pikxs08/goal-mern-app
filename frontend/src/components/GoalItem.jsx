@@ -30,6 +30,9 @@ function GoalItem({ user, goal }) {
 
   return (
     <>
+      {modalIsOpen && (
+        <GoalModal goal={goal} user={user} closeModal={closeModal} />
+      )}
       <div className="goal-item">
         <div className="goal-item-inner">
           {goal.needsHelp ? (
@@ -57,7 +60,6 @@ function GoalItem({ user, goal }) {
           />
         </div>
       </div>
-      {modalIsOpen && <GoalModal goal={goal} closeModal={closeModal} />}
     </>
   );
 }
