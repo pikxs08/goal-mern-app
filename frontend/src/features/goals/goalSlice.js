@@ -47,13 +47,13 @@ export const addComment = createAsyncThunk(
   }
 );
 
-// Get user goals
+// Get user goals with filtering
 export const getGoals = createAsyncThunk(
   "goals/getAll",
-  async (_, thunkAPI) => {
+  async (filter, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token;
-      return await goalService.getGoals(token);
+      return await goalService.getGoals(token, filter); // Pass the filter to the service function
     } catch (error) {
       const message =
         (error.response &&
@@ -66,20 +66,7 @@ export const getGoals = createAsyncThunk(
   }
 );
 
-// Get latest comments
-export const fetchLatestComments = createAsyncThunk(
-  "goals/fetchLatestComments",
-  async (_, thunkAPI) => {
-    try {
-      const token = thunkAPI.getState().auth.user.token;
-      return await goalService.fetchLatestComments(token);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
-  }
-);
-
-// Delete user goal
+// Update user goal
 export const updateGoal = createAsyncThunk(
   "goals/putGoal",
   async (id, thunkAPI) => {
@@ -116,6 +103,7 @@ export const deleteGoal = createAsyncThunk(
     }
   }
 );
+
 export const goalSlice = createSlice({
   name: "goals",
   initialState,
@@ -143,7 +131,7 @@ export const goalSlice = createSlice({
       .addCase(getGoals.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.goals = action.payload;
+        state.goals = action.payload; // Update the goals state with filtered goals
       })
       .addCase(getGoals.rejected, (state, action) => {
         state.isLoading = false;
@@ -181,31 +169,6 @@ export const goalSlice = createSlice({
         state.goals = updatedGoals;
       })
       .addCase(addComment.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload;
-      })
-      .addCase(fetchLatestComments.fulfilled, (state, action) => {
-        const commentsData = action.payload;
-
-        // Iterate over each goal
-        state.goals.forEach((goal) => {
-          // Iterate over each comment in the goal
-          goal.comments.forEach((comment) => {
-            // Find the comment data from the fetched comments based on the comment's ID
-            const commentData = commentsData.find(
-              (data) => data._id === comment._id
-            );
-            if (commentData) {
-              // Populate the user and mentor fields in the comment
-
-              comment.user = commentData.user;
-              comment.mentor = commentData.mentor;
-            }
-          });
-        });
-      })
-      .addCase(fetchLatestComments.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

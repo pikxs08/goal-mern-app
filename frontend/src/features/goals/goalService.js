@@ -33,28 +33,15 @@ const addComment = async (goalId, commentData, token) => {
   }
 };
 
-// Fetch latest comments
-const fetchLatestComments = async (token) => {
-  try {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    };
-
-    const response = await axios.get(`${API_URL}/latest-comments`, config);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-// Get user goals
-const getGoals = async (token) => {
+// Get user goals with filtering
+const getGoals = async (token, filter) => {
   const config = {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
+    },
+    params: {
+      filter: filter, // Pass the filter parameter
     },
   };
 
@@ -96,7 +83,6 @@ const goalService = {
   putGoal,
   deleteGoal,
   addComment,
-  fetchLatestComments,
 };
 
 export default goalService;

@@ -2,22 +2,40 @@ const asyncHandler = require("express-async-handler");
 
 const Goal = require("../models/goalModel");
 const User = require("../models/userModel");
-
 // Get goals with comments
 const getGoals = asyncHandler(async (req, res) => {
   let goals;
 
-  // Check if the user is a mentor
-  if (req.user.isMentor) {
-    // If user is a mentor, fetch all goals with comments from the database
-    goals = await Goal.find({})
-      .populate("comments.user", "name")
-      .populate("comments.mentor", "name");
-  } else {
-    // Otherwise, fetch only the goals belonging to the requesting user and populate comments accordingly
-    goals = await Goal.find({ user: req.user.id })
-      .populate("comments.user", "name")
-      .populate("comments.mentor", "name");
+  // Check query parameters to determine the type of goals to fetch, if empty, fetch all goals
+  const filter = req.query.filter || "all";
+
+  // Fetch goals based on the filter
+  switch (filter) {
+    case "all":
+      // Fetch all goals for mentors, only user's goals for basic users
+      goals = req.user.isMentor
+        ? await Goal.find({})
+        : await Goal.find({ user: req.user.id });
+      break;
+    case "completed":
+      // Fetch completed goals for mentors, only user's completed goals for basic users
+      goals = req.user.isMentor
+        ? await Goal.find({ completed: true })
+        : await Goal.find({ user: req.user.id, completed: true });
+      break;
+    case "in-progress":
+      // Fetch incomplete goals for mentors, only user's incomplete goals for basic users
+      goals = req.user.isMentor
+        ? await Goal.find({ completed: false })
+        : await Goal.find({ user: req.user.id, completed: false });
+      break;
+    case "mentor":
+      // Fetch all goals for the mentor signed in
+      goals = await Goal.find({ user: req.user.id });
+      break;
+    default:
+      // By default, fetch goals for the requesting user
+      goals = await Goal.find({ user: req.user.id });
   }
 
   res.status(200).json(goals);
@@ -49,21 +67,6 @@ const addComment = asyncHandler(async (req, res) => {
   await goal.save();
 
   res.status(201).json(goal.comments);
-});
-
-// Get latest comments
-const fetchLatestComments = asyncHandler(async (req, res) => {
-  try {
-    const latestComments = await Goal.find()
-      .sort({ createdAt: -1 })
-      .limit(50) // Adjust this limit as per your requirement
-      .populate("comments.user", "name")
-      .populate("comments.mentor", "name");
-
-    res.status(200).json(latestComments);
-  } catch (error) {
-    res.status(500).json({ message: "Failed to fetch latest comments" });
-  }
 });
 
 const setGoal = asyncHandler(async (req, res) => {
@@ -141,5 +144,4 @@ module.exports = {
   putGoal,
   addComment,
   deleteGoal,
-  fetchLatestComments,
 };

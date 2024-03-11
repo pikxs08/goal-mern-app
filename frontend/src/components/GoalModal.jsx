@@ -2,12 +2,11 @@ import React, { useState } from "react";
 import Modal from "react-modal";
 import { FaCommentDots } from "react-icons/fa6";
 import { useDispatch } from "react-redux";
-import {
-  updateGoal,
-  addComment,
-  fetchLatestComments,
-} from "../features/goals/goalSlice";
+import { updateGoal, addComment } from "../features/goals/goalSlice";
 import { IoIosClose } from "react-icons/io";
+
+// Setting Modal Element - When view is clicked it opens
+Modal.setAppElement("#root");
 
 function GoalModal({ goal, closeModal }) {
   const dispatch = useDispatch();
@@ -61,9 +60,6 @@ function GoalModal({ goal, closeModal }) {
       // Dispatch action to add comment
       await handleCommentSubmit(e);
 
-      // Fetch latest comments
-      await dispatch(fetchLatestComments());
-
       // Clear comment input
       setCommentText("");
 
@@ -82,8 +78,6 @@ function GoalModal({ goal, closeModal }) {
     // Dispatch action to add comment
     dispatch(addComment({ id: goal._id, text: commentText }))
       .then(() => {
-        // Dispatch action to fetch latest comments
-        dispatch(fetchLatestComments());
         // Clear comment input
         setCommentText("");
       })
@@ -109,8 +103,6 @@ function GoalModal({ goal, closeModal }) {
       <button className="btn btn-close" onClick={closeModal}>
         <IoIosClose />
       </button>
-      {/* Comment Section */}
-
       <div className="goal-info-cont">
         <div className="info-cont">
           <div className="goal-info">
