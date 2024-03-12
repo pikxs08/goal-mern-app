@@ -35,12 +35,14 @@ function Dashboard() {
 
     // if new goal is added, fetch goals again
     if (isError || message) {
+      setFilter("all");
       dispatch(getGoals());
     }
 
     // Fetch goals if user is logged in
     if (user) {
-      dispatch(getGoals());
+      setFilter("all");
+      dispatch(getGoals("all"));
     }
   }, [user, navigate, isError, message, dispatch]);
 
@@ -67,9 +69,40 @@ function Dashboard() {
     <>
       <section className="heading">
         {!user?.isMentor ? (
-          <h3>You are signed in as a basic user</h3>
+          <>
+            <h3>You are signed in as a mentee.</h3>
+            <p className="header-body">
+              Create a goal below by entering a title and selecting a date by
+              which you would like to achieve it by. Because you are a normal
+              user, your goals are only visible to Mentors, who will provide
+              advice and insights.
+            </p>
+            <p className="header-body">
+              You can also view your goals and delete them if you wish. You can
+              also filter your goals by selecting the radio buttons below. Leave
+              a comment to ask for help from a mentor and also mark your goal as
+              completed when you achieve it. Happy goal setting!
+            </p>
+          </>
         ) : (
-          <h3>You are signed in as a mentor</h3>
+          <>
+            <h3>You are signed in as a mentor</h3>
+
+            <p className="header-body">
+              As a mentor, you have full access to assist and guide your mentees
+              in setting and achieving their goals. Below, you can provide
+              advice, collaborate with other mentors, and empower your mentees
+              to reach their aspirations. As a mentor, your insights and support
+              will be invaluable in guiding them on their journey.
+            </p>
+            <p className="header-body">
+              You can view your mentees' goals and offer guidance. Encourage
+              them to delete goals if needed and filter their objectives using
+              the radio buttons below. Engage with them by leaving comments and
+              celebrate their accomplishments by marking goals as completed.
+              Together, let's inspire and empower growth through goal setting!
+            </p>
+          </>
         )}
       </section>
       <GoalsForm />
@@ -85,7 +118,7 @@ function Dashboard() {
                 id="all"
                 name="filter"
                 onChange={filterGoals}
-                checked={filter === "all"}
+                checked={filter === "all"} // Update the checked attribute
               />
               <label htmlFor="all">all goals</label>
             </div>

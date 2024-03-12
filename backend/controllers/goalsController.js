@@ -35,7 +35,9 @@ const getGoals = asyncHandler(async (req, res) => {
       break;
     default:
       // By default, fetch goals for the requesting user
-      goals = await Goal.find({ user: req.user.id });
+      goals = req.user.isMentor
+        ? await Goal.find({})
+        : await Goal.find({ user: req.user.id });
   }
 
   res.status(200).json(goals);
