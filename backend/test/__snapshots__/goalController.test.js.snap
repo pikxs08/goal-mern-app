@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`POST /api/users/login Should return user token 1`] = `
+{
+  "_id": "65edd1c0007bb6439ad7197f",
+  "email": "pieter@gmail.com",
+  "isMentor": false,
+  "name": "Pieter Slabbert",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ZWRkMWMwMDA3YmI2NDM5YWQ3MTk3ZiIsImlhdCI6MTcxMDI0MzA2NiwiZXhwIjoxNzEyODM1MDY2fQ.gaxdbzgNk7gYFNW84nwERlyK4D6ta8nc4BIMEKLAa_Q",
+}
+`;
