@@ -91,7 +91,7 @@ JWT_SECRET=abc123
 ```
 
 4. Run `npm install` to install dependencies.
-5. Run `npm run start` to start the development server concurrently for the backend and frontend.
+5. Run `npm run dev` to start the development server concurrently for the backend and frontend.
 6. Access the application in your web browser at `http://localhost:8000`.
 
 ## Security Measures
