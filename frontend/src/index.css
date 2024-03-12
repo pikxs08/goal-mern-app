@@ -318,6 +318,7 @@ input[type="radio"] {
   min-width: 350px;
   width: 100%;
   max-width: 500px;
+  text-align: left;
 }
 
 .goal-status {

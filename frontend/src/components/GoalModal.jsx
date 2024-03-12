@@ -18,10 +18,6 @@ function GoalModal({ goal, user, closeModal }) {
   // Get user name
   const userName = user.name;
 
-  // Get goal comments
-  const comments = goal.comments.map((comment) => comment.user);
-  console.log(comments);
-
   // Function to calculate days left before target date
   const daysLeft = (targetDate) => {
     const date1 = new Date(targetDate);

@@ -8,7 +8,6 @@ const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, isMentor } = req.body;
 
   if (!name || !email || !password) {
-    console.log("here");
     res.status(400);
     throw new Error("Please fill in all fields");
   }
@@ -43,7 +42,6 @@ const registerUser = asyncHandler(async (req, res) => {
       token,
     });
   } else {
-    console.log("running here");
     res.status(400);
     throw new Error("Invalid user data");
   }

@@ -59,7 +59,7 @@ function Register() {
         password,
         isMentor: formData.isMentor,
       };
-      console.log(userData);
+
       dispatch(register(userData));
     }
   };
