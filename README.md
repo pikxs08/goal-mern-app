@@ -91,7 +91,7 @@ JWT_SECRET=abc123
 ```
 
 4. Run `npm install` to install dependencies.
-5. Run `npm run dev` to start the development server concurrently for the backend and frontend.
+5. Run `npm run start` to start the development server concurrently for the backend and frontend.
 6. Access the application in your web browser at `http://localhost:8000`.
 
 ## Security Measures
@@ -108,6 +108,4 @@ No third-party APIs are used in the Goal Tracker App.
 
 The Goal Tracker App is deployed on Heroku. The backend and frontend are deployed together for simplicity and ease of management. Heroku configuration variables are set up for environment-specific variables such as JWT secret and MongoDB URI.
 
-[Deployed App Link](https
-
-://goals-mern-app-93ea3f418a1f.herokuapp.com/login)
+[Deployed App Link](https://goals-mern-app-93ea3f418a1f.herokuapp.com/login)
