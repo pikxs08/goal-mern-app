@@ -2,13 +2,20 @@
     "version": 2,
     "builds": [
         {
-            "src": "index.js",
+            "src": "backend/**/*.js",
             "use": "@vercel/node"
-        }
-    ], "routes": [
-        {
-            "src": "/(.*)",
-            "dest": "/index.js"
-        }
+          },
+          {
+            "src": "frontend/**/*.js",
+            "use": "@vercel/static-build"
+          }
+    ],
+    "routes": [
+      { "src": "/api/goals", "methods": ["GET", "POST"], "dest": "/api/goals.js" },
+      { "src": "/api/goals/([^/]+)", "methods": ["PUT", "DELETE"], "dest": "/api/goals.js?id=$1" },
+      { "src": "/api/goals/([^/]+)/comment", "methods": ["PUT"], "dest": "/api/goals.js?goalId=$1" },
+      { "src": "/api/users", "methods": ["POST"], "dest": "/api/users.js" },
+      { "src": "/api/users/login", "methods": ["POST"], "dest": "/api/users.js" },
+      { "src": "/api/users/me", "methods": ["GET"], "dest": "/api/users.js" }
     ]
-}
+  }
